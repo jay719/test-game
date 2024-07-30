@@ -1,0 +1,50 @@
+-- main.script
+local speed = 200
+local player = nil
+local box = nil
+local showText = false
+
+function init(self)
+	-- Initialize game objects
+	player = go.get_id("player")
+	box = go.get_id("box")
+end
+
+function update(self, dt)
+	local isMoving = false
+	local px, py = go.get_position(player)
+	local bx, by = go.get_position(box)
+
+	-- Move player
+	if (input.is_key_pressed(input.KEY_UP)) then
+		py = py + speed * dt
+		isMoving = true
+	end
+	if (input.is_key_pressed(input.KEY_DOWN)) then
+		py = py - speed * dt
+		isMoving = true
+	end
+	if (input.is_key_pressed(input.KEY_LEFT)) then
+		px = px - speed * dt
+		isMoving = true
+	end
+	if (input.is_key_pressed(input.KEY_RIGHT)) then
+		px = px + speed * dt
+		isMoving = true
+	end
+
+	-- Update player position
+	go.set_position(vmath.vector3(px, py, 0), player)
+
+	-- Check interaction
+	if math.abs(px - bx) < 32 and math.abs(py - by) < 32 then
+		showText = true
+	else
+		showText = false
+	end
+
+	-- Debug print
+	if showText then
+		print("Player is near the box!")
+	end
+end
